@@ -35,6 +35,7 @@ import {
   trackOnboardingRuntimeScanResult,
   trackPageView,
 } from '../analytics/events';
+import { recordAmrEntry, type AmrEntryAttribution } from '../analytics/amr-attribution';
 import {
   clearOnboardingSessionId,
   getOrCreateOnboardingSessionId,
@@ -1385,7 +1386,13 @@ function OnboardingView({
   }
   function handlePrimaryAction() {
     if (step === 0 && amrSelectedAndSignedOut) {
-      void handleAmrSignInToContinue();
+      const attribution = recordAmrEntry(
+        analytics.track,
+        'onboarding_amr_sign_in_continue',
+        new Date(),
+        { reuseExistingFrom: ['onboarding_amr_card'] },
+      );
+      void handleAmrSignInToContinue(attribution);
       return;
     }
     if (isLastStep) {
@@ -1414,7 +1421,9 @@ function OnboardingView({
     setStep((current) => current + 1);
   }
 
-  async function handleAmrSignInToContinue() {
+  async function handleAmrSignInToContinue(
+    attribution?: AmrEntryAttribution | null,
+  ) {
     if (amrLoginPending) return;
     amrLoginPollCancelledRef.current = false;
     setAmrLoginError(false);
@@ -1426,7 +1435,7 @@ function OnboardingView({
         setStep((current) => current + 1);
         return;
       }
-      const loginResult = await startVelaLogin();
+      const loginResult = await startVelaLogin(attribution);
       if (!loginResult.ok && !loginResult.alreadyRunning) {
         setAmrLoginError(true);
         return;
@@ -1718,6 +1727,7 @@ function OnboardingView({
                       featured
                       selected={runtime === 'amr'}
                       onClick={() => {
+                        recordAmrEntry(analytics.track, 'onboarding_amr_card');
                         setRuntime('amr');
                         onModeChange('daemon');
                         onAgentChange('amr');
