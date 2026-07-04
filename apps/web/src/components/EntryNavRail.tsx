@@ -23,7 +23,9 @@ export type EntryView =
   | 'design-systems'
   | 'library'
   | 'brands'
-  | 'integrations';
+  | 'integrations'
+  | 'nobility'
+  | 'openmontage';
 
 interface Props {
   view: EntryView;
@@ -98,6 +100,9 @@ export function EntryNavRail({
       node.setAttribute('inert', '');
     }
   }, [open]);
+
+  const isNobility = view === 'nobility';
+  const isOpenMontage = view === 'openmontage';
 
   return (
     <nav
