@@ -19,7 +19,9 @@ export type EntryHomeView =
   | 'design-systems'
   | 'library'
   | 'brands'
-  | 'integrations';
+  | 'integrations'
+  | 'nobility'
+  | 'openmontage';
 
 export type Route =
   | {
