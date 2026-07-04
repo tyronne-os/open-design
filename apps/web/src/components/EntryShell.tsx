@@ -128,6 +128,8 @@ import {
   type PluginShareProjectOutcome,
 } from '../state/projects';
 import { TasksView } from './TasksView';
+import { NobilityView } from './NobilityView';
+import { OpenMontageView } from './OpenMontageView';
 import {
   API_KEY_PLACEHOLDERS,
   API_PROTOCOL_TABS,
@@ -425,6 +427,9 @@ function navElementForView(
       return 'design_systems';
     case 'integrations':
       return 'integrations';
+    case 'nobility':
+    case 'openmontage':
+      return null;
     default:
       return null;
   }
@@ -1033,6 +1038,16 @@ export function EntryShell({
                 onSkillsRefresh={onSkillsRefresh}
                 onSkillsChanged={onSkillsChanged}
               />
+            ) : null}
+            {view === 'nobility' ? (
+              <div data-testid="entry-view-nobility" style={{ position: 'absolute', inset: 0, zIndex: 10 }}>
+                <NobilityView />
+              </div>
+            ) : null}
+            {view === 'openmontage' ? (
+              <div data-testid="entry-view-openmontage" style={{ position: 'absolute', inset: 0, zIndex: 10 }}>
+                <OpenMontageView />
+              </div>
             ) : null}
           </div>
         </main>
